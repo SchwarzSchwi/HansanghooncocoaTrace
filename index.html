@@ -1,15 +1,47 @@
 <!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Upbit Live | 실시간 원화 시세</title>
-<style>
-:root{font-family:system-ui,'Malgun Gothic',sans-serif;color:#e9eef8;background:#0a1020}*{box-sizing:border-box}body{margin:0}main{max-width:1150px;margin:auto;padding:38px 20px}header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}h1{font-size:30px;margin:0}h1 span{color:#79a9ff}.sub{color:#9daac1;font-size:14px;margin:10px 0 24px}.pill{padding:9px 14px;border-radius:99px;background:#28344b;color:#e4eaf5;font-size:13px}.pill.online{background:#123e31;color:#80e4b0}.pill.offline{background:#4c2833;color:#ffb0b9}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}input,button{background:#19253a;border:1px solid #33425c;border-radius:10px;padding:12px;color:white;font:inherit}input{flex:1;min-width:220px}button{cursor:pointer}button:hover{background:#283b5c}.info{font-size:13px;color:#9daac1;margin:15px 0;line-height:1.8}.tablewrap{overflow:auto;border:1px solid #26354c;border-radius:16px;background:#111b2e}table{width:100%;border-collapse:collapse;min-width:800px}th,td{padding:17px;text-align:right;border-bottom:1px solid #253248;white-space:nowrap}th{color:#aab7cd;font-weight:500;font-size:12px;background:#15223a}th:first-child,td:first-child{text-align:left}tr:last-child td{border:0}td{font-variant-numeric:tabular-nums}small{display:block;color:#8293ae;margin-top:5px}.up{color:#ff727f}.down{color:#6daeff}.flat{color:#c2cbda}.muted{color:#91a0b7}.foot{font-size:12px;color:#889ab3;line-height:1.9;margin-top:20px}a{color:#90baff}code{color:#d3dfff}
-</style></head><body><main><header><div><h1><span>UPBIT</span> LIVE</h1><div class="sub">원화 마켓 실시간 시세 모니터 · 공개 데이터 전용</div></div><div class="pill" id="status" role="status">연결 준비 중</div></header>
-<div class="toolbar"><input id="search" placeholder="종목 검색 (예: BTC, 비트코인, KRW-XRP)" aria-label="종목 검색"><button id="reconnect">다시 연결</button></div>
-<div class="info">데이터 출처: <a href="https://docs.upbit.com/kr/reference/websocket-ticker" target="_blank" rel="noopener noreferrer">Upbit Public WebSocket · ticker</a> · 단위: KRW · 시간대: Asia/Seoul (KST)<br>최근 수신: <span id="last">없음</span> · 조회 시각: <span id="now">-</span> · 조회 방식: WebSocket 스트림</div>
-<div class="tablewrap"><table><thead><tr><th>마켓 / 종목</th><th>현재가 (KRW)</th><th>전일 대비</th><th>24시간 거래대금 (KRW)</th><th>원천 데이터 시각 (KST)</th><th>상태</th></tr></thead><tbody id="rows"></tbody></table></div>
-<p class="foot">실제 수신값만 표시합니다. 연결 중단 시 이전 시세는 최신 가격으로 취급하지 않고 상태를 별도로 표시합니다. 업비트 데이터는 지연·변경될 수 있으며 투자 판단을 위한 보증 자료가 아닙니다. API 키, 토큰, 로그인, 개인정보 입력이 필요하지 않습니다.</p></main>
-<script>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Upbit Live | 실시간 원화 시세</title>
+		<style>
+:root{font-family:system-ui,'Malgun Gothic',sans-serif;color:#e9eef8;background:#0a1020}*{box-sizing:border-box}body{margin:0}main{max-width:1150px;margin:auto;padding:38px 20px}header{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;flex-wrap:wrap}h1{margin:0;font-size:30px;line-height:1.15;letter-spacing:.4px}h1 span{color:#7dd3fc}.sub{color:#9fb0cb;font-size:13px}.pill{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border-radius:999px;background:#17233a;color:#c9d5eb;font-size:12px}.ok{background:#123022;color:#8ff0b3}.warn{background:#3a2a12;color:#ffd38a}.err{background:#3a1212;color:#ff9b9b}.toolbar{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:15px}input,button{border:1px solid #24324d;background:#0f172a;color:#e9eef8;border-radius:10px;padding:10px 12px;font-size:14px}input:focus{outline:2px solid #334e85;outline-offset:1px}button{cursor:pointer}button:hover{background:#15203a}.info{margin:11px 0 16px;font-size:12px;color:#a6b4cc}a{color:#7dd3fc}a:hover{color:#a5e3ff}.tablewrap{background:#0f172a;border:1px solid #24324d;border-radius:14px;overflow:auto}table{width:100%;border-collapse:collapse;min-width:820px}th,td{padding:12px 12px;border-bottom:1px solid #1e2a44;text-align:right;font-variant-numeric:tabular-nums}th:first-child,td:first-child{text-align:left}thead th{position:sticky;top:0;background:#111b32;z-index:1;color:#bfd2f6;font-size:12px;text-transform:uppercase;letter-spacing:.4px}.up{color:#f97373}.down{color:#60a5fa}.flat{color:#c6d1e8}.stale{opacity:.58}.badge{display:inline-block;padding:3px 8px;border-radius:999px;font-size:11px;background:#1b2945;color:#c8d6f0}.foot{margin-top:11px;color:#8ea3c7;font-size:12px}
+		</style>
+	</head>
+	<body>
+		<main>
+			<header>
+				<div>
+					<h1><span>UPBIT</span> LIVE</h1>
+					<div class="sub">원화 마켓 실시간 시세 모니터 · 공개 데이터 전용</div>
+				</div>
+				<div class="pill" id="status">초기화 중…</div>
+			</header>
+			<div class="toolbar">
+				<input id="search" placeholder="종목 검색 (예: BTC, 비트코인, KRW-XRP)" aria-label="종목 검색">
+				<button id="reconnect">다시 연결</button>
+			</div>
+			<div class="info">데이터 출처: <a href="https://docs.upbit.com/kr/reference/websocket-ticker" target="_blank" rel="noopener noreferrer">Upbit Public WebSocket · ticker</a> · 단위: KRW · 마지막 갱신: <span id="now">-</span></div>
+			<div class="tablewrap">
+				<table>
+					<thead>
+						<tr>
+							<th>마켓 / 종목</th>
+							<th>현재가 (KRW)</th>
+							<th>전일 대비</th>
+							<th>24시간 거래대금 (KRW)</th>
+							<th>원천 데이터 시각 (KST)</th>
+							<th>상태</th>
+						</tr>
+					</thead>
+					<tbody id="rows"></tbody>
+				</table>
+			</div>
+			<p class="foot">실제 수신값만 표시합니다. 연결 중단 시 이전 시세는 최신 가격으로 취급하지 않고 상태를 별도로 표시합니다. 업비트 데이터는 지연·누락 가능성이 있습니다.</p>
+		</main>
+		<script>
 'use strict';
-const pairs=[['KRW-BTC','비트코인'],['KRW-ETH','이더리움'],['KRW-XRP','엑스알피'],['KRW-SOL','솔라나'],['KRW-DOGE','도지코인'],['KRW-ADA','에이다'],['KRW-AVAX','아발란체'],['KRW-LINK','체인링크'],['KRW-DOT','폴카닷'],['KRW-TRX','트론']];
+const pairs=[['KRW-BTC','비트코인'],['KRW-ETH','이더리움'],['KRW-XRP','엑스알피'],['KRW-SOL','솔라나'],['KRW-DOGE','도지코인'],['KRW-ADA','에이다'],['KRW-AVAX','아발란체'],['KRW-LINK','체인링크'],['KRW-DOT','폴카닷'],['KRW-TRX','트론'],['KRW-MATIC','폴리곤'],['KRW-NEAR','니어'],['KRW-ATOM','코스모스'],['KRW-APT','앱토스'],['KRW-STX','스택스'],['KRW-SUI','수이']];
 const endpoint='wss://api.upbit.com/websocket/v1';
 const state=new Map(), rows=document.getElementById('rows'),status=document.getElementById('status');
 const fmt=new Intl.NumberFormat('ko-KR',{maximumFractionDigits:8});
@@ -17,8 +49,10 @@ const fmtKst=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeri
 let socket=null,retry=null,ping=null,generation=0,connected=false;
 const dateTime=ms=>Number.isFinite(ms)?fmtKst.format(new Date(ms)):'미제공';
 function setStatus(msg,cls=''){status.textContent=msg;status.className='pill '+cls;}
-function render(){const term=document.getElementById('search').value.trim().toLowerCase();rows.replaceChildren();for(const [code,name] of pairs){if(!(`${code} ${name}`.toLowerCase().includes(term)))continue;const d=state.get(code);const tr=document.createElement('tr');const fields=[`${code}\n${name}`,d?fmt.format(d.trade_price):'자료 없음',d?`${d.signed_change_rate>=0?'+':''}${(d.signed_change_rate*100).toFixed(2)}%`:'—',d?fmt.format(d.acc_trade_price_24h):'—',d?dateTime(d.timestamp):'미수신',!connected?'연결 끊김':d?'수신 완료':'수신 대기'];fields.forEach((value,i)=>{const td=document.createElement('td');if(i===0){const [a,b]=value.split('\n');td.textContent=a;const sm=document.createElement('small');sm.textContent=b;td.append(sm);}else{td.textContent=value;}if(i===2&&d)td.className=d.signed_change_rate>0?'up':d.signed_change_rate<0?'down':'flat';if(!d||(!connected&&i===5))td.classList.add('muted');tr.append(td)});rows.append(tr)}}
+function render(){const term=document.getElementById('search').value.trim().toLowerCase();rows.replaceChildren();for(const [code,name] of pairs){if(!(`${code} ${name}`.toLowerCase().includes(term)))continue;const d=state.get(code)||{};const tr=document.createElement('tr');if(d.stale)tr.classList.add('stale');const diff=(d.change==='RISE'?'up':d.change==='FALL'?'down':'flat');const signed=(d.signed!==undefined&&Number.isFinite(d.signed))?`${d.signed>0?'+':''}${(d.signed*100).toFixed(2)}%`:'-';tr.innerHTML=`<td><strong>${code}</strong><br><span class="sub">${name}</span></td><td>${Number.isFinite(d.price)?fmt.format(d.price):'-'}</td><td class="${diff}">${signed}</td><td>${Number.isFinite(d.acc)?fmt.format(Math.round(d.acc)):'-'}</td><td>${dateTime(d.ts)}</td><td><span class="badge">${d.stale?'지연':'정상'}</span></td>`;rows.appendChild(tr);}if(!rows.children.length){const tr=document.createElement('tr');tr.innerHTML='<td colspan="6" style="text-align:center;color:#9fb0cb">검색 결과가 없습니다.</td>';rows.appendChild(tr);}}
 function cleanup(){clearTimeout(retry);clearInterval(ping);if(socket){const old=socket;socket=null;old.onopen=old.onclose=old.onerror=old.onmessage=null;old.close()}}
-function connect(){const id=++generation;cleanup();connected=false;setStatus('연결 중…');render();try{socket=new WebSocket(endpoint);socket.binaryType='arraybuffer';socket.onopen=()=>{if(id!==generation)return;connected=true;setStatus('실시간 연결됨','online');socket.send(JSON.stringify([{ticket:'upbit-live-public'},{type:'ticker',codes:pairs.map(x=>x[0])},{format:'DEFAULT'}]));ping=setInterval(()=>{if(socket?.readyState===WebSocket.OPEN)socket.send('PING')},45000);render()};socket.onmessage=async e=>{if(id!==generation)return;try{const raw=typeof e.data==='string'?e.data:e.data instanceof ArrayBuffer?new TextDecoder().decode(e.data):await e.data.text();const d=JSON.parse(raw);if(d.error){setStatus('API 오류: '+d.error.message,'offline');return}if(d.type!=='ticker'||!pairs.some(x=>x[0]===d.code)||!Number.isFinite(d.trade_price)||!Number.isFinite(d.signed_change_rate)||!Number.isFinite(d.acc_trade_price_24h))return;state.set(d.code,d);document.getElementById('last').textContent=dateTime(Date.now());render()}catch(err){console.warn('수신 데이터 파싱 실패',err)}};socket.onerror=()=>{if(id===generation)setStatus('연결 오류','offline')};socket.onclose=()=>{if(id!==generation)return;connected=false;clearInterval(ping);setStatus('연결 끊김 · 재연결 대기','offline');render();retry=setTimeout(()=>{if(id===generation)connect()},3000)}}catch(err){setStatus('WebSocket 지원 오류','offline')}}
-document.getElementById('search').addEventListener('input',render);document.getElementById('reconnect').addEventListener('click',connect);setInterval(()=>{document.getElementById('now').textContent=dateTime(Date.now())},1000);document.getElementById('now').textContent=dateTime(Date.now());render();connect();
-</script></body></html>
+function connect(){const id=++generation;cleanup();connected=false;setStatus('연결 중…');render();try{socket=new WebSocket(endpoint);socket.binaryType='arraybuffer';socket.onopen=()=>{if(id!==generation||!socket)return;connected=true;setStatus('실시간 연결됨','ok');const ticket='web-'+Math.random().toString(36).slice(2,9);const msg=[{ticket},{type:'ticker',codes:pairs.map(p=>p[0]),isOnlyRealtime:true},{format:'SIMPLE'}];socket.send(JSON.stringify(msg));ping=setInterval(()=>{try{socket&&socket.send('PING')}catch{}},25000);};socket.onmessage=e=>{if(id!==generation)return;let text='';if(typeof e.data==='string'){text=e.data;}else{try{text=new TextDecoder().decode(new Uint8Array(e.data));}catch{return;}}if(!text)return;let j;try{j=JSON.parse(text);}catch{return;}const code=j.cd,price=Number(j.tp),signed=Number(j.sr),acc=Number(j.atp24h),change=j.c;const ts=Number(j.tms||j.ttms||j.timestamp);if(!code)return;state.set(code,{price,signed,acc,change,ts,stale:false});render();};socket.onerror=()=>{if(id!==generation)return;setStatus('오류 발생 - 재시도 예정','warn');};socket.onclose=()=>{if(id!==generation)return;connected=false;for(const v of state.values())v.stale=true;render();setStatus('연결 종료 - 재연결 중','err');retry=setTimeout(()=>id===generation&&connect(),1800);};}catch{setStatus('브라우저가 WebSocket을 지원하지 않습니다','err');}}
+document.getElementById('search').addEventListener('input',render);document.getElementById('reconnect').addEventListener('click',connect);setInterval(()=>{document.getElementById('now').textContent=fmtKst.format(new Date());if(!connected){for(const v of state.values())v.stale=true;render();}},1000);connect();
+		</script>
+	</body>
+</html>
