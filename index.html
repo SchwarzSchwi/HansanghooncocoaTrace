@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Upbit Live | 실시간 원화 시세</title>
 		<style>
-:root{font-family:system-ui,'Malgun Gothic',sans-serif;color:#e9eef8;background:#0a1020}*{box-sizing:border-box}body{margin:0}main{max-width:1150px;margin:auto;padding:38px 20px}header{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;flex-wrap:wrap}h1{margin:0;font-size:30px;line-height:1.15;letter-spacing:.4px}h1 span{color:#7dd3fc}.sub{color:#9fb0cb;font-size:13px}.pill{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border-radius:999px;background:#17233a;color:#c9d5eb;font-size:12px}.ok{background:#123022;color:#8ff0b3}.warn{background:#3a2a12;color:#ffd38a}.err{background:#3a1212;color:#ff9b9b}.toolbar{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:15px}input,button{border:1px solid #24324d;background:#0f172a;color:#e9eef8;border-radius:10px;padding:10px 12px;font-size:14px}input:focus{outline:2px solid #334e85;outline-offset:1px}button{cursor:pointer}button:hover{background:#15203a}.info{margin:11px 0 16px;font-size:12px;color:#a6b4cc}a{color:#7dd3fc}a:hover{color:#a5e3ff}.tablewrap{background:#0f172a;border:1px solid #24324d;border-radius:14px;overflow:auto}table{width:100%;border-collapse:collapse;min-width:820px}th,td{padding:12px 12px;border-bottom:1px solid #1e2a44;text-align:right;font-variant-numeric:tabular-nums}th:first-child,td:first-child{text-align:left}thead th{position:sticky;top:0;background:#111b32;z-index:1;color:#bfd2f6;font-size:12px;text-transform:uppercase;letter-spacing:.4px}.up{color:#f97373}.down{color:#60a5fa}.flat{color:#c6d1e8}.stale{opacity:.58}.badge{display:inline-block;padding:3px 8px;border-radius:999px;font-size:11px;background:#1b2945;color:#c8d6f0}.foot{margin-top:11px;color:#8ea3c7;font-size:12px}
+:root{font-family:system-ui,'Malgun Gothic',sans-serif;color:#e9eef8;background:#0a1020}*{box-sizing:border-box}body{margin:0}main{max-width:1150px;margin:auto;padding:38px 20px}header{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;flex-wrap:wrap}h1{margin:0;font-size:30px;line-height:1.15;letter-spacing:.4px}h1 span{color:#7dd3fc}.sub{color:#9fb0cb;font-size:13px}.pill{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border-radius:999px;background:#17233a;color:#c9d5eb;font-size:12px}.ok{background:#123022;color:#8ff0b3}.warn{background:#3a2a12;color:#ffd38a}.err{background:#3a1212;color:#ff9b9b}.toolbar{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:15px}input,button,select{border:1px solid #24324d;background:#0f172a;color:#e9eef8;border-radius:10px;padding:10px 12px;font-size:14px}input:focus,button:focus-visible,select:focus-visible{outline:2px solid #7dd3fc;outline-offset:2px}button{cursor:pointer}button:hover:not(:disabled){background:#15203a}button:disabled,select:disabled{cursor:not-allowed;opacity:.6}.voice-tools{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin:14px 0;padding:13px;border:1px solid #24324d;border-radius:12px;background:#0f172a}.voice-tools h2{width:100%;margin:0;font-size:16px}.voice-tools p{width:100%;margin:0;color:#a6b4cc;font-size:12px}.voice-tools label{font-size:13px;color:#c9d5eb}.voice-tools select{max-width:210px}.voice-status{color:#a6b4cc;font-size:12px}.data-state{margin:11px 0 16px;padding:9px 11px;border-radius:8px;background:#111b32;color:#bfd2f6;font-size:13px}.data-state.error{color:#ffb0b0;background:#3a1212}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.info{margin:11px 0 16px;font-size:12px;color:#a6b4cc}a{color:#7dd3fc}a:hover{color:#a5e3ff}.tablewrap{background:#0f172a;border:1px solid #24324d;border-radius:14px;overflow:auto}table{width:100%;border-collapse:collapse;min-width:820px}th,td{padding:12px 12px;border-bottom:1px solid #1e2a44;text-align:right;font-variant-numeric:tabular-nums}th:first-child,td:first-child{text-align:left}thead th{position:sticky;top:0;background:#111b32;z-index:1;color:#bfd2f6;font-size:12px;text-transform:uppercase;letter-spacing:.4px}.up{color:#f97373}.down{color:#60a5fa}.flat{color:#c6d1e8}.stale{opacity:.68}.badge{display:inline-block;padding:3px 8px;border-radius:999px;font-size:11px;background:#1b2945;color:#c8d6f0}.foot{margin-top:11px;color:#8ea3c7;font-size:12px}
 		</style>
 	</head>
 	<body>
@@ -15,15 +15,34 @@
 					<h1><span>UPBIT</span> LIVE</h1>
 					<div class="sub">원화 마켓 실시간 시세 모니터 · 공개 데이터 전용</div>
 				</div>
-				<div class="pill" id="status">초기화 중…</div>
+				<div class="pill" id="status" role="status" aria-live="polite" aria-atomic="true">초기화 중…</div>
 			</header>
 			<div class="toolbar">
 				<input id="search" placeholder="종목 검색 (예: BTC, 비트코인, KRW-XRP)" aria-label="종목 검색">
 				<button id="reconnect">다시 연결</button>
 			</div>
+			<section class="voice-tools" aria-labelledby="voice-heading">
+				<h2 id="voice-heading">화면 내용 음성으로 읽기</h2>
+				<p>읽기는 직접 시작할 때만 실행되며, 실시간 업데이트를 자동으로 읽지 않습니다. 음성은 보조 기능이며 시세와 상태는 계속 화면에 표시됩니다.</p>
+				<label for="voice-select">음성</label>
+				<select id="voice-select" aria-label="읽기 음성 선택">
+					<option value="">한국어 기본 음성</option>
+				</select>
+				<label for="speech-rate">속도</label>
+				<select id="speech-rate" aria-label="읽기 속도">
+					<option value="0.8">느리게</option>
+					<option value="1" selected>보통</option>
+					<option value="1.2">빠르게</option>
+				</select>
+				<button id="voice-start">화면 내용 읽기</button>
+				<button id="voice-stop" disabled>읽기 중지</button>
+				<span class="voice-status" id="voice-status" role="status" aria-live="polite">음성 읽기는 시작 버튼을 눌러 실행할 수 있습니다.</span>
+			</section>
+			<p class="data-state" id="data-state" role="status" aria-live="polite" aria-atomic="true">최신 시세 데이터를 불러오는 중입니다.</p>
 			<div class="info">데이터 출처: <a href="https://docs.upbit.com/kr/reference/websocket-ticker" target="_blank" rel="noopener noreferrer">Upbit Public WebSocket · ticker</a> · 단위: KRW · 마지막 갱신: <span id="now">-</span></div>
 			<div class="tablewrap">
 				<table>
+					<caption class="sr-only">Upbit 원화 마켓 시세 목록. 연결이 끊기거나 데이터가 오래되면 지연 상태로 표시됩니다.</caption>
 					<thead>
 						<tr>
 							<th>마켓 / 종목</th>
@@ -39,20 +58,6 @@
 			</div>
 			<p class="foot">실제 수신값만 표시합니다. 연결 중단 시 이전 시세는 최신 가격으로 취급하지 않고 상태를 별도로 표시합니다. 업비트 데이터는 지연·누락 가능성이 있습니다.</p>
 		</main>
-		<script>
-'use strict';
-const pairs=[['KRW-BTC','비트코인'],['KRW-ETH','이더리움'],['KRW-XRP','엑스알피'],['KRW-SOL','솔라나'],['KRW-DOGE','도지코인'],['KRW-ADA','에이다'],['KRW-AVAX','아발란체'],['KRW-LINK','체인링크'],['KRW-DOT','폴카닷'],['KRW-TRX','트론'],['KRW-MATIC','폴리곤'],['KRW-NEAR','니어'],['KRW-ATOM','코스모스'],['KRW-APT','앱토스'],['KRW-STX','스택스'],['KRW-SUI','수이']];
-const endpoint='wss://api.upbit.com/websocket/v1';
-const state=new Map(), rows=document.getElementById('rows'),status=document.getElementById('status');
-const fmt=new Intl.NumberFormat('ko-KR',{maximumFractionDigits:8});
-const fmtKst=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
-let socket=null,retry=null,ping=null,generation=0,connected=false;
-const dateTime=ms=>Number.isFinite(ms)?fmtKst.format(new Date(ms)):'미제공';
-function setStatus(msg,cls=''){status.textContent=msg;status.className='pill '+cls;}
-function render(){const term=document.getElementById('search').value.trim().toLowerCase();rows.replaceChildren();for(const [code,name] of pairs){if(!(`${code} ${name}`.toLowerCase().includes(term)))continue;const d=state.get(code)||{};const tr=document.createElement('tr');if(d.stale)tr.classList.add('stale');const diff=(d.change==='RISE'?'up':d.change==='FALL'?'down':'flat');const signed=(d.signed!==undefined&&Number.isFinite(d.signed))?`${d.signed>0?'+':''}${(d.signed*100).toFixed(2)}%`:'-';tr.innerHTML=`<td><strong>${code}</strong><br><span class="sub">${name}</span></td><td>${Number.isFinite(d.price)?fmt.format(d.price):'-'}</td><td class="${diff}">${signed}</td><td>${Number.isFinite(d.acc)?fmt.format(Math.round(d.acc)):'-'}</td><td>${dateTime(d.ts)}</td><td><span class="badge">${d.stale?'지연':'정상'}</span></td>`;rows.appendChild(tr);}if(!rows.children.length){const tr=document.createElement('tr');tr.innerHTML='<td colspan="6" style="text-align:center;color:#9fb0cb">검색 결과가 없습니다.</td>';rows.appendChild(tr);}}
-function cleanup(){clearTimeout(retry);clearInterval(ping);if(socket){const old=socket;socket=null;old.onopen=old.onclose=old.onerror=old.onmessage=null;old.close()}}
-function connect(){const id=++generation;cleanup();connected=false;setStatus('연결 중…');render();try{socket=new WebSocket(endpoint);socket.binaryType='arraybuffer';socket.onopen=()=>{if(id!==generation||!socket)return;connected=true;setStatus('실시간 연결됨','ok');const ticket='web-'+Math.random().toString(36).slice(2,9);const msg=[{ticket},{type:'ticker',codes:pairs.map(p=>p[0]),isOnlyRealtime:true},{format:'SIMPLE'}];socket.send(JSON.stringify(msg));ping=setInterval(()=>{try{socket&&socket.send('PING')}catch{}},25000);};socket.onmessage=e=>{if(id!==generation)return;let text='';if(typeof e.data==='string'){text=e.data;}else{try{text=new TextDecoder().decode(new Uint8Array(e.data));}catch{return;}}if(!text)return;let j;try{j=JSON.parse(text);}catch{return;}const code=j.cd,price=Number(j.tp),signed=Number(j.sr),acc=Number(j.atp24h),change=j.c;const ts=Number(j.tms||j.ttms||j.timestamp);if(!code)return;state.set(code,{price,signed,acc,change,ts,stale:false});render();};socket.onerror=()=>{if(id!==generation)return;setStatus('오류 발생 - 재시도 예정','warn');};socket.onclose=()=>{if(id!==generation)return;connected=false;for(const v of state.values())v.stale=true;render();setStatus('연결 종료 - 재연결 중','err');retry=setTimeout(()=>id===generation&&connect(),1800);};}catch{setStatus('브라우저가 WebSocket을 지원하지 않습니다','err');}}
-document.getElementById('search').addEventListener('input',render);document.getElementById('reconnect').addEventListener('click',connect);setInterval(()=>{document.getElementById('now').textContent=fmtKst.format(new Date());if(!connected){for(const v of state.values())v.stale=true;render();}},1000);connect();
-		</script>
+		<script src="app.js" defer></script>
 	</body>
 </html>

@@ -1,0 +1,77 @@
+Agent collaboration record
+Date: 2026-10-27
+Repository: SchwarzSchwi/HansanghooncocoaTrace
+
+Record type: Accurate summary of actual agent exchanges, not a verbatim transcript.
+Two read-only explore agents were launched in this task on the same branch. The
+data/network agent and the speech/accessibility agent inspected the existing
+full index.html. Both were explicitly asked not to edit files. They returned
+recommendations; they did not run commands, tests, or browser checks.
+
+Roles and first handoffs
+------------------------
+Data/network agent: reviewed the existing Upbit endpoint, static market pairs,
+websocket event lifecycle, validation gaps, stale state, and reconnect behavior.
+It recommended central configuration, strict response validation, generation
+guards, a connection timeout, bounded exponential reconnect delays, and clear
+states. Its initial sketch suggested a larger connection state-machine refactor;
+the implementation retained the small static app structure instead.
+
+Speech/accessibility agent: reviewed the existing DOM and proposed browser
+speech synthesis controls, Korean voice selection, and unsupported-browser
+fallback. Its first response included a suggestion to announce status and
+ticker changes automatically. That suggestion conflicted with the requirement
+that speech start only after explicit user action.
+
+Cross-agent exchange and integration handoff
+--------------------------------------------
+The data/network agent was asked to assess a user-initiated filtered snapshot
+reader with no speech on ticks or status changes. It recommended keeping speech
+decoupled from the live network/render path, taking a snapshot only when Start
+is pressed, and making Stop cancel playback without affecting the websocket.
+
+The speech/accessibility agent was given the network agent's recommendations
+and asked to check them against the no-autoplay requirement. It explicitly
+acknowledged that its earlier live-ticker speech suggestion violated that
+requirement, then recommended a user-driven snapshot and no voice output from
+render, connection status, or incoming ticker events. It also suggested tests
+for malformed data, retry/stale handling, and unsupported/empty voice lists.
+
+Integration decisions
+---------------------
+The implementation follows the stricter user requirement: speech is opt-in per
+Start action, reads at most five currently filtered markets once, and never
+speaks on load, search, connection changes, voice-list loading, or live ticks.
+Voice output is isolated from websocket state. It uses the existing public
+Upbit websocket with a snapshot-plus-live subscription; it does not add a REST
+endpoint. Network configuration, validation, timeouts, stale display, and
+bounded reconnects are handled in app.js.
+
+Validation findings
+-------------------
+After integration, the local Node.js built-in test run passed all 6 tests for
+ticker normalization and invalid values, stale state, capped reconnect delay,
+unsupported/empty voice lists, voice selection, and bounded filtered speech
+snapshots. JavaScript syntax and git diff whitespace checks also passed at that
+point. These checks were run by the main task, not by either explore agent.
+
+The main task's first local browser check caught a contract mismatch the unit
+fixture had missed: actual SIMPLE ticker frames use `scr` for signed change
+rate, not `sr`. The fixture and validator were corrected to require the
+observed `ty: ticker` and `scr` fields. The browser then displayed live ticker
+values. A public market-list lookup also confirmed KRW-POL is listed while
+KRW-MATIC is not, so the configured Polygon market was updated to KRW-POL.
+The browser showed an empty search result, live data, stale last-known rows
+after a simulated reconnect, and stale rows while a new socket had connected
+but had not yet supplied a fresh ticker. Live ticker updates did not start
+speech; keyboard focus was visible on the search field.
+
+The browser exposed SpeechSynthesis but its utterance immediately errored in
+the headless environment; the Start/Stop controls returned to the idle state,
+but audible playback could not be verified. No live Upbit connectivity or
+browser/OS speech test was run by either explore agent.
+
+A separate integrated code review found that a small tolerated future clock
+offset could be accepted and still appear current. The implementation now
+classifies any future-dated value as stale and has a regression assertion for
+that case; timestamps more than the tolerance remain rejected.
